@@ -1,5 +1,10 @@
 ## Changelog
 
+### v1.0.2
+_14/02/2025_
+
+- Reset dependencies version to working conditions to ensure compatibility.
+
 ### v1.0.1
 _14/02/2025_
 

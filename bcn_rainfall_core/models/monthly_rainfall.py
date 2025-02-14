@@ -31,7 +31,7 @@ class MonthlyRainfall(YearlyRainfall):
         """
         Load Yearly Rainfall for instance month variable into pandas DataFrame.
 
-        :return: A pandas DataFrame displaying bcn_rainfall_core data (in mm)
+        :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance month according to year.
         """
 
@@ -55,7 +55,7 @@ class MonthlyRainfall(YearlyRainfall):
             end_year,
             figure_label=figure_label
             or f"Rainfall (mm) for {self.month.value} between {begin_year} and {end_year}",
-            trace_label=f"{self.month.value} bcn_rainfall_core",
+            trace_label=f"{self.month.value} rainfall",
             plot_average=plot_average,
             plot_linear_regression=plot_linear_regression,
         )

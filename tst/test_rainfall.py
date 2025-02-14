@@ -15,7 +15,7 @@ month = Month.MAY
 season = Season.SPRING
 
 
-class TestAllRainfall:
+class TestRainfall:
     @staticmethod
     def test_export_all_data_to_csv():
         folder_path = ""

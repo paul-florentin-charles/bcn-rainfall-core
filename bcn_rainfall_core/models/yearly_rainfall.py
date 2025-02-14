@@ -44,7 +44,7 @@ class YearlyRainfall:
         """
         Load Yearly Rainfall into pandas DataFrame.
 
-        :return: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
+        :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         """
 
         return self.load_rainfall(Month.JANUARY, Month.DECEMBER)
@@ -54,16 +54,16 @@ class YearlyRainfall:
     ) -> pd.DataFrame:
         """
         Generic function to load Yearly Rainfall data from raw data stored in pandas DataFrame.
-        Raw data has to be shaped as bcn_rainfall_core values for each month according to year.
+        Raw data has to be shaped as rainfall values for each month according to year.
 
         :param start_month: A Month Enum representing the month
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_month: A Month Enum representing the month
-        to end getting our bcn_rainfall_core values (optional).
-        If not given, we load bcn_rainfall_core data only for given start_month.
-        :return: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
+        to end getting our rainfall values (optional).
+        If not given, we load rainfall data only for given start_month.
+        :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
         :raise DataFormatError: If raw_data attribute of instance doesn't have exactly 13 columns.
-        1 for the year; 12 for every monthly bcn_rainfall_core.
+        1 for the year; 12 for every monthly rainfall.
         """
         if not isinstance(self.raw_data, pd.DataFrame) or len(
             self.raw_data.columns
@@ -85,10 +85,10 @@ class YearlyRainfall:
         Retrieves Yearly Rainfall within a specific year range.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
-        :return: A pandas DataFrame displaying bcn_rainfall_core data (in mm)
+        to end getting our rainfall values.
+        :return: A pandas DataFrame displaying rainfall data (in mm)
         for instance month according to year.
         """
 
@@ -107,9 +107,9 @@ class YearlyRainfall:
         Export the actual instance data state as a CSV.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :param path: path to csv file to save our data (optional).
         :return: CSV data as a string if no path is set.
         None otherwise.
@@ -124,9 +124,9 @@ class YearlyRainfall:
         Computes Rainfall average for a specific year range.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :return: A float representing the average Rainfall.
         """
 
@@ -158,18 +158,18 @@ class YearlyRainfall:
     ) -> int:
         """
         Computes the count of years within a specific year range that are below
-        the percentage of a bcn_rainfall_core normal computed from a given normal year.
+        the percentage of a rainfall normal computed from a given normal year.
 
         :param normal_year: An integer representing the year
-        to start computing the 30 years normal of the bcn_rainfall_core.
+        to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
-        :param percentage: The percentage of the bcn_rainfall_core normal
+        to end getting our rainfall values.
+        :param percentage: The percentage of the rainfall normal
         to compare against.
 
-        :return: The count of years that are below the percentage of the bcn_rainfall_core normal.
+        :return: The count of years that are below the percentage of the rainfall normal.
         """
 
         return rain.get_years_compared_to_given_rainfall_value(
@@ -185,11 +185,11 @@ class YearlyRainfall:
         Computes the number of years below normal for a specific year range.
 
         :param normal_year: An integer representing the year
-        to start computing the 30 years normal of the bcn_rainfall_core.
+        to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :return: The number of years below the normal as an integer.
         """
 
@@ -207,18 +207,18 @@ class YearlyRainfall:
     ) -> int:
         """
         Computes the count of years within a specific year range that are above
-        the percentage of a bcn_rainfall_core normal computed from a given normal year.
+        the percentage of a rainfall normal computed from a given normal year.
 
         :param normal_year: An integer representing the year
-        to start computing the 30 years normal of the bcn_rainfall_core.
+        to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
-        :param percentage: The percentage of the bcn_rainfall_core normal
+        to end getting our rainfall values.
+        :param percentage: The percentage of the rainfall normal
         to compare against.
 
-        :return: The count of years that are above the percentage of the bcn_rainfall_core normal.
+        :return: The count of years that are above the percentage of the rainfall normal.
         """
 
         return rain.get_years_compared_to_given_rainfall_value(
@@ -234,11 +234,11 @@ class YearlyRainfall:
         Computes the number of years above normal for a specific year range.
 
         :param normal_year: An integer representing the year
-        to start computing the 30 years normal of the bcn_rainfall_core.
+        to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :return: The number of years above the normal as an integer.
         """
 
@@ -259,15 +259,15 @@ class YearlyRainfall:
         self, normal_year: int, begin_year: int, end_year: int
     ) -> float | None:
         """
-        Computes the relative distance between average bcn_rainfall_core within two given years
-        and normal bcn_rainfall_core computed from a specific year.
+        Computes the relative distance between average rainfall within two given years
+        and normal rainfall computed from a specific year.
 
         :param normal_year: An integer representing the year
-        to start computing the 30 years normal of the bcn_rainfall_core.
+        to start computing the 30 years normal of the rainfall.
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :return: The relative distance as a float.
         """
         gap = end_year - begin_year + 1
@@ -296,9 +296,9 @@ class YearlyRainfall:
         By default, it uses the 'Rainfall' column.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :param label: A string corresponding to an existing column label (optional).
         :param bool weigh_by_average: whether to divide standard deviation by average or not (optional).
         Defaults to False.
@@ -323,15 +323,15 @@ class YearlyRainfall:
         self, begin_year: int, end_year: int
     ) -> tuple[tuple[float, float], list[float]]:
         """
-        Computes Linear Regression of bcn_rainfall_core according to year for a given time interval.
+        Computes Linear Regression of rainfall according to year for a given time interval.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         If not given, defaults to latest year available.
         :return: a tuple containing a tuple of floats (r2 score, slope)
-        and a list of bcn_rainfall_core values computed by the linear regression.
+        and a list of rainfall values computed by the linear regression.
         """
         data = self.get_yearly_rainfall(begin_year, end_year)
 
@@ -352,13 +352,13 @@ class YearlyRainfall:
 
     def add_percentage_of_normal(self, begin_year: int, end_year: int) -> None:
         """
-        Add the percentage of bcn_rainfall_core compared with normal
+        Add the percentage of rainfall compared with normal
         to our pandas DataFrame for a specific year range.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :return: None
         """
         normal = self.get_average_yearly_rainfall(begin_year, end_year)
@@ -450,16 +450,16 @@ class YearlyRainfall:
         Return bar figure of Rainfall data according to year.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :param figure_label: A string to label graphic data (optional).
         If not set or set to "", label value is used.
         :param trace_label: A string to label trace data (optional).
         If not set or set to "", label value is used.
-        :param plot_average: Whether to plot average bcn_rainfall_core as a horizontal line or not.
+        :param plot_average: Whether to plot average rainfall as a horizontal line or not.
         Defaults to False.
-        :param plot_linear_regression: Whether to plot linear regression of bcn_rainfall_core or not.
+        :param plot_linear_regression: Whether to plot linear regression of rainfall or not.
         Defaults to False.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
@@ -483,7 +483,7 @@ class YearlyRainfall:
                     go.Scatter(
                         x=yearly_rainfall[Label.YEAR.value],
                         y=[average_rainfall] * len(yearly_rainfall),
-                        name="Average bcn_rainfall_core",
+                        name="Average rainfall",
                     )
                 )
 
@@ -513,12 +513,12 @@ class YearlyRainfall:
         end_year: int,
     ) -> go.Figure | None:
         """
-        Return plotly figure with scatter trace of bcn_rainfall_core linear regression according to year.
+        Return plotly figure with scatter trace of rainfall linear regression according to year.
 
         :param begin_year: An integer representing the year
-        to start getting our bcn_rainfall_core values.
+        to start getting our rainfall values.
         :param end_year: An integer representing the year
-        to end getting our bcn_rainfall_core values.
+        to end getting our rainfall values.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
         (r2, slope), predicted_rainfalls = self.get_linear_regression(
@@ -555,7 +555,7 @@ class YearlyRainfall:
 
     def get_scatter_figure_of_normal(self, display_clusters=False) -> go.Figure | None:
         """
-        Return plotly figure with horizontal line of normal bcn_rainfall_core according to year and scatter bcn_rainfall_core values.
+        Return plotly figure with horizontal line of normal rainfall according to year and scatter rainfall values.
 
         :param display_clusters: Whether to display clusters computed with k-means or not.
         Defaults to False (optional).
@@ -566,7 +566,7 @@ class YearlyRainfall:
             go.Scatter(
                 x=self.data[Label.YEAR.value],
                 y=[100.0] * len(self.data),
-                name="Normal bcn_rainfall_core (%)",
+                name="Normal rainfall (%)",
             )
         )
 

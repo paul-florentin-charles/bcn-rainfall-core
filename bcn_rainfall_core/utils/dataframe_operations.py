@@ -1,6 +1,6 @@
 """
 Provides functions to do operations on DataFrame objects
-containing bcn_rainfall_core data over years.
+containing rainfall data over years.
 """
 
 import pandas as pd
@@ -17,12 +17,12 @@ def get_rainfall_within_year_interval(
     """
     Retrieves Yearly Rainfall within a specific year range.
 
-    :param yearly_rainfall: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
+    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param begin_year: An integer representing the year
-    to start getting our bcn_rainfall_core values.
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
-    to end getting our bcn_rainfall_core values (optional).
-    :return: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
+    to end getting our rainfall values (optional).
+    :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
     """
     if end_year is not None:
         yearly_rainfall = yearly_rainfall[yearly_rainfall[Label.YEAR.value] <= end_year]
@@ -35,7 +35,7 @@ def remove_column(yearly_rainfall: pd.DataFrame, *, label: Label) -> bool:
     Remove a column from a DataFrame using its label.
     Removing 'Year' or 'Rainfall' columns is prevented.
 
-    :param yearly_rainfall: A pandas DataFrame displaying bcn_rainfall_core data
+    :param yearly_rainfall: A pandas DataFrame displaying rainfall data
     under various shapes according to year.
     :param label: A string corresponding to an existing column label.
     :return: A boolean set to whether the operation passed or not.
@@ -75,11 +75,11 @@ def retrieve_rainfall_data_with_constraints(
     :param starting_year: An integer representing the year we should start get value from
     :param round_precision: A integer representing decimal precision for Rainfall data
     :param start_month: An integer representing the month
-    to start getting our bcn_rainfall_core values.
+    to start getting our rainfall values.
     :param end_month: An integer representing the month
-    to end getting our bcn_rainfall_core values (optional).
-    If not given, we load bcn_rainfall_core data only for given start_month.
-    :return: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
+    to end getting our rainfall values (optional).
+    If not given, we load rainfall data only for given start_month.
+    :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
     """
     years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
     if end_month is not None and end_month < start_month:

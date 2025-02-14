@@ -1,5 +1,5 @@
 """
-Provides useful functions for plotting bcn_rainfall_core data in all shapes.
+Provides useful functions for plotting rainfall data in all shapes.
 """
 
 from typing import Union
@@ -66,7 +66,7 @@ def get_figure_of_column_according_to_year(
     """
     Return plotly figure for specified column data according to year.
 
-    :param yearly_rainfall: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
+    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param label: A Label enum designating the column to be displayed as bars for y-values.
     :param figure_type: A case-insensitive string corresponding to a plotly BaseTraceType mapped in global dictionary;
     use private function to retrieve plotly trace class.
@@ -112,17 +112,17 @@ def get_bar_figure_of_rainfall_averages(
     end_year: int,
 ) -> go.Figure:
     """
-    Return plotly bar figure displaying average bcn_rainfall_core for each month or for each season passed through the dict.
+    Return plotly bar figure displaying average rainfall for each month or for each season passed through the dict.
 
     :param rainfall_instance_by_label: A dict of months respectively mapped with instances of MonthlyRainfall
     or a dict of seasons respectively mapped with instances of SeasonalRainfall.
     To be purposeful, all instances should have the same time frame in years.
     :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
     :param begin_year: An integer representing the year
-    to start getting our bcn_rainfall_core values.
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
-    to end getting our bcn_rainfall_core values.
-    :return: A plotly Figure object of the bcn_rainfall_core averages for each month or for each season.
+    to end getting our rainfall values.
+    :return: A plotly Figure object of the rainfall averages for each month or for each season.
     """
     labels: list[str] = []
     averages: list[float] = []
@@ -139,7 +139,7 @@ def get_bar_figure_of_rainfall_averages(
 
     _update_plotly_figure_layout(
         figure,
-        title=f"Average bcn_rainfall_core (mm) between {begin_year} and {end_year}",
+        title=f"Average rainfall (mm) between {begin_year} and {end_year}",
         xaxis_title=time_mode.value.capitalize()[:-2],
         yaxis_title=Label.RAINFALL.value,
     )
@@ -156,17 +156,17 @@ def get_bar_figure_of_rainfall_linreg_slopes(
     end_year: int,
 ) -> go.Figure:
     """
-    Return plotly bar figure displaying bcn_rainfall_core linear regression slopes for each month or
+    Return plotly bar figure displaying rainfall linear regression slopes for each month or
     for each season passed through the dict.
 
     :param rainfall_instance_by_label: A dict of months respectively mapped with instances of MonthlyRainfall
     or a dict of seasons respectively mapped with instances of SeasonalRainfall.
     :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
     :param begin_year: An integer representing the year
-    to start getting our bcn_rainfall_core values.
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
-    to end getting our bcn_rainfall_core values.
-    :return: A plotly Figure object of the bcn_rainfall_core LinReg slopes for each month.
+    to end getting our rainfall values.
+    :return: A plotly Figure object of the rainfall LinReg slopes for each month.
     """
     labels: list[str] = []
     slopes: list[float] = []
@@ -216,12 +216,12 @@ def get_bar_figure_of_relative_distances_to_normal(
     or a dict of seasons respectively mapped with instances of SeasonalRainfall.
     :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
     :param normal_year: An integer representing the year
-    to start computing the 30 years normal of the bcn_rainfall_core.
+    to start computing the 30 years normal of the rainfall.
     :param begin_year: An integer representing the year
-    to start getting our bcn_rainfall_core values.
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
-    to end getting our bcn_rainfall_core values.
-    :return: A plotly Figure object of the bcn_rainfall_core relative distances to normal for each month or for each season.
+    to end getting our rainfall values.
+    :return: A plotly Figure object of the rainfall relative distances to normal for each month or for each season.
     """
     labels: list[str] = []
     relative_distances_to_normal: list[float | None] = []
@@ -266,11 +266,11 @@ def get_pie_figure_of_years_above_and_below_normal(
 
     :param rainfall_instance: An instance of one these 3 classes: [YearlyRainfall, MonthlyRainfall, SeasonalRainfall].
     :param normal_year: An integer representing the year
-    to start computing the 30 years normal of the bcn_rainfall_core.
+    to start computing the 30 years normal of the rainfall.
     :param begin_year: An integer representing the year
-    to start getting our bcn_rainfall_core values.
+    to start getting our rainfall values.
     :param end_year: An integer representing the year
-    to end getting our bcn_rainfall_core values.
+    to end getting our rainfall values.
     :return: A plotly Figure object of the percentage of years above and below normal as a pie chart.
     """
     years_above_normal = rainfall_instance.get_years_above_normal(

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bcn-rainfall-core"
-version = "1.0.0"
+version = "1.0.1"
 description = "Tools to load and manipulate rainfall data from the city of Barcelona, Catalunya."
 readme = "README.md"
 requires-python = ">=3.12"

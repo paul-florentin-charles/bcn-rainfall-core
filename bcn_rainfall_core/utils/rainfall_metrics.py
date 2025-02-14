@@ -1,6 +1,6 @@
 """
 Provides functions to compute interesting and reusable generic metrics
-over DataFrame containing bcn_rainfall_core data over years.
+over DataFrame containing rainfall data over years.
 """
 
 from typing import Callable
@@ -15,8 +15,8 @@ def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) ->
     """
     Computes Rainfall average.
 
-    :param yearly_rainfall: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
-    :param round_precision: A float representing the bcn_rainfall_core precision (optional). Defaults to 2.
+    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
+    :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
     :return: A float representing the average Rainfall.
     """
     return yearly_rainfall[Label.RAINFALL.value].mean().round(round_precision)
@@ -30,12 +30,12 @@ def get_years_compared_to_given_rainfall_value(
 ) -> int:
     """
     Computes the number of years that conform specified comparison
-    to the given bcn_rainfall_core value.
+    to the given rainfall value.
 
-    :param yearly_rainfall: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
-    :param rainfall_value: A float representing the bcn_rainfall_core value.
+    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
+    :param rainfall_value: A float representing the rainfall value.
     :param comparator: A comparator function that takes exactly two parameters and return a boolean.
-    :return: The number of years compared to the given bcn_rainfall_core value as an integer.
+    :return: The number of years compared to the given rainfall value as an integer.
     """
     yearly_rainfall = yearly_rainfall[
         comparator(yearly_rainfall[Label.RAINFALL.value], rainfall_value)
@@ -61,11 +61,11 @@ def get_normal(
     yearly_rainfall: pd.DataFrame, begin_year, *, round_precision=1
 ) -> float:
     """
-    Computes average bcn_rainfall_core over 30 years time frame.
+    Computes average rainfall over 30 years time frame.
 
-    :param yearly_rainfall: A pandas DataFrame displaying bcn_rainfall_core data (in mm) according to year.
+    :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param begin_year: A year to start the time frame.
-    :param round_precision: A float representing the bcn_rainfall_core precision (optional). Defaults to 2.
+    :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
     :return: A float storing the normal.
     """
 

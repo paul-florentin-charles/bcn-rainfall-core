@@ -23,7 +23,7 @@ class Config(BaseConfig):
     @cached_property
     def get_data_settings(self) -> DataSettings:
         """
-        Return data settings to load and manipulate bcn_rainfall_core data.
+        Return data settings to load and manipulate rainfall data.
 
         Example:
         {

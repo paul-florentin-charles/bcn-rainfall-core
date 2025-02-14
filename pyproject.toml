@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "bcn-rainfall-core"
 version = "1.0.0"
@@ -16,6 +20,10 @@ dependencies = [
     "scikit-learn>=1.6.1",
     "scipy>=1.15.1",
 ]
+authors = [{name = "Paul Charles", email = "paul.charles@tutanota.com"}]
 
 [tool.setuptools]
 license-files = []
+
+[tool.setuptools.packages.find]
+exclude = ["resources*", "tst*"]

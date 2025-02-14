@@ -1,0 +1,5 @@
+data:
+  file_url: https://opendata-ajuntament.barcelona.cat/data/dataset/5334c15e-0d70-410b-85f3-d97740ffc1ed/resource/6f1fb778-0767-478b-b332-c64a833d26d2/download/precipitacionsbarcelonadesde1786.csv
+  local_file_path: resources/bcn_rainfall_1786_2024.csv
+  start_year: 1971
+  rainfall_precision: 1

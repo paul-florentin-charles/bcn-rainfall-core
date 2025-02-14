@@ -1,0 +1,21 @@
+[project]
+name = "bcn-rainfall-core"
+version = "1.0.0"
+description = "Tools to load and manipulate rainfall data from the city of Barcelona, Catalunya."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "coverage>=7.6.12",
+    "numpy>=2.2.3",
+    "pandas>=2.2.3",
+    "plotly>=6.0.0",
+    "pre-commit>=4.1.0",
+    "pydantic>=2.10.6",
+    "pytest>=8.3.4",
+    "pyyaml>=6.0.2",
+    "scikit-learn>=1.6.1",
+    "scipy>=1.15.1",
+]
+
+[tool.setuptools]
+license-files = []

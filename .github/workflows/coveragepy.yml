@@ -1,6 +1,8 @@
 name: Coveragepy
 
-on: push
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   build:

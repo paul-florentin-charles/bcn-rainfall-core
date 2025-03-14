@@ -1,5 +1,5 @@
 """
-Provides a rich class to manipulate Monthly Rainfall data.
+Provides a rich class to manipulate Monthly rainfall data.
 """
 
 import pandas as pd
@@ -11,7 +11,7 @@ from bcn_rainfall_core.utils import Month
 
 class MonthlyRainfall(YearlyRainfall):
     """
-    Provides numerous functions to load, manipulate and export Monthly Rainfall data.
+    Provides numerous functions to load, manipulate and export Monthly rainfall data.
     """
 
     def __init__(

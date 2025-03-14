@@ -7,4 +7,4 @@ class DataSettings(BaseModel):
     file_url: str | None = Field(None)
     local_file_path: str | None = Field(None)
     start_year: int
-    rainfall_precision: int
+    rainfall_precision: int = Field(1)

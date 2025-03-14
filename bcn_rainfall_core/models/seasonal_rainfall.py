@@ -1,5 +1,5 @@
 """
-Provides a rich class to manipulate Seasonal Rainfall data.
+Provides a rich class to manipulate Seasonal rainfall data.
 """
 
 import pandas as pd
@@ -11,7 +11,7 @@ from bcn_rainfall_core.utils import Season
 
 class SeasonalRainfall(YearlyRainfall):
     """
-    Provides numerous functions to load, manipulate and export Seasonal Rainfall data.
+    Provides numerous functions to load, manipulate and export Seasonal rainfall data.
     """
 
     def __init__(

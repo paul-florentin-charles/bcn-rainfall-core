@@ -13,10 +13,10 @@ from bcn_rainfall_core.utils import dataframe_operations as df_ops
 
 def get_average_rainfall(yearly_rainfall: pd.DataFrame, *, round_precision=1) -> float:
     """
-    Computes Rainfall average.
+    Computes rainfall average.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
-    :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
+    :param round_precision: A float representing the rainfall precision (optional). Defaults to 1.
     :return: A float representing the average Rainfall.
     """
     return yearly_rainfall[Label.RAINFALL.value].mean().round(round_precision)
@@ -61,11 +61,11 @@ def get_normal(
     yearly_rainfall: pd.DataFrame, begin_year, *, round_precision=1
 ) -> float:
     """
-    Computes average rainfall over 30 years time frame.
+    Computes rainfall average over 30 years time frame.
 
     :param yearly_rainfall: A pandas DataFrame displaying rainfall data (in mm) according to year.
     :param begin_year: A year to start the time frame.
-    :param round_precision: A float representing the rainfall precision (optional). Defaults to 2.
+    :param round_precision: A float representing the rainfall precision (optional). Defaults to 1.
     :return: A float storing the normal.
     """
 

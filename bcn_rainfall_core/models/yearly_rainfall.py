@@ -1,5 +1,5 @@
 """
-Provides a rich class to manipulate Yearly Rainfall data.
+Provides a rich class to manipulate Yearly rainfall data.
 """
 
 import operator as opr
@@ -22,7 +22,7 @@ from bcn_rainfall_core.utils import DataFormatError, Label, Month
 
 class YearlyRainfall:
     """
-    Provides numerous functions to load, manipulate and export Yearly Rainfall data.
+    Provides numerous functions to load, manipulate and export Yearly rainfall data.
     """
 
     def __init__(
@@ -53,7 +53,7 @@ class YearlyRainfall:
         self, start_month: Month, end_month: Month | None = None
     ) -> pd.DataFrame:
         """
-        Generic function to load Yearly Rainfall data from raw data stored in pandas DataFrame.
+        Generic function to load Yearly rainfall data from raw data stored in pandas DataFrame.
         Raw data has to be shaped as rainfall values for each month according to year.
 
         :param start_month: A Month Enum representing the month
@@ -447,7 +447,7 @@ class YearlyRainfall:
         plot_linear_regression=False,
     ) -> go.Figure | None:
         """
-        Return bar figure of Rainfall data according to year.
+        Return bar figure of rainfall data according to year.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.

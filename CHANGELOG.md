@@ -1,5 +1,11 @@
 ## Changelog
 
+### v1.0.3
+_14/03/2025_
+
+- Various modifications of comments & type hints, nothing really crucial.
+- Make `rainfall_precision` optional in `config.yml` and default to 1.
+
 ### v1.0.2
 _14/02/2025_
 

@@ -130,9 +130,7 @@ def get_bar_figure_of_rainfall_averages(
         labels.append(label)
 
         averages.append(
-            rainfall_instance.get_average_yearly_rainfall(
-                begin_year=begin_year, end_year=end_year
-            )
+            rainfall_instance.get_average_yearly_rainfall(begin_year, end_year)
         )
 
     figure = go.Figure(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
@@ -175,7 +173,7 @@ def get_bar_figure_of_rainfall_linreg_slopes(
         labels.append(label)
 
         (r2_score, slope), _ = rainfall_instance.get_linear_regression(
-            begin_year=begin_year, end_year=end_year
+            begin_year, end_year
         )
 
         slopes.append(slope)
@@ -229,7 +227,7 @@ def get_bar_figure_of_relative_distances_to_normal(
         labels.append(label)
         relative_distances_to_normal.append(
             rainfall_instance.get_relative_distance_to_normal(
-                normal_year=normal_year, begin_year=begin_year, end_year=end_year
+                normal_year, begin_year, end_year
             )
         )
 

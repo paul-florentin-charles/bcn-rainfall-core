@@ -71,7 +71,7 @@ class Month(BaseEnum):
     DECEMBER = "December"
 
     @classmethod
-    def get_month_rank_dict(cls):
+    def get_month_rank_dict(cls) -> dict["Month", int]:
         return {
             cls.JANUARY: 1,
             cls.FEBRUARY: 2,
@@ -87,7 +87,7 @@ class Month(BaseEnum):
             cls.DECEMBER: 12,
         }
 
-    def get_rank(self) -> int:
+    def get_rank(self):
         return self.get_month_rank_dict()[self]
 
 
@@ -102,7 +102,7 @@ class Season(BaseEnum):
     FALL = "fall"
 
     @classmethod
-    def get_months_by_season_dict(cls):
+    def get_months_by_season_dict(cls) -> dict["Season", list[Month]]:
         return {
             cls.WINTER: [Month.DECEMBER, Month.JANUARY, Month.FEBRUARY],
             cls.SPRING: [Month.MARCH, Month.APRIL, Month.MAY],

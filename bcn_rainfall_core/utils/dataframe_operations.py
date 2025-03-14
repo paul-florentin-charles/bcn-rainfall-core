@@ -68,12 +68,12 @@ def retrieve_rainfall_data_with_constraints(
     end_month: int | None = None,
 ) -> pd.DataFrame:
     """
-    Apply transformations to a pandas DataFrame depicting Yearly Rainfall data
+    Apply transformations to a pandas DataFrame depicting Yearly rainfall data
     for each month of the year.
 
-    :param monthly_rainfall: A DataFrame representing Yearly Rainfall data for each month
+    :param monthly_rainfall: A DataFrame representing Yearly rainfall data for each month
     :param starting_year: An integer representing the year we should start get value from
-    :param round_precision: A integer representing decimal precision for Rainfall data
+    :param round_precision: A integer representing decimal precision for rainfall data
     :param start_month: An integer representing the month
     to start getting our rainfall values.
     :param end_month: An integer representing the month
@@ -81,7 +81,7 @@ def retrieve_rainfall_data_with_constraints(
     If not given, we load rainfall data only for given start_month.
     :return: A pandas DataFrame displaying rainfall data (in mm) according to year.
     """
-    years: pd.DataFrame = monthly_rainfall.iloc[:, :1]
+    years = monthly_rainfall.iloc[:, :1]
     if end_month is not None and end_month < start_month:
         rainfall = concat_columns(
             [

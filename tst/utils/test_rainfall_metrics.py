@@ -1,6 +1,5 @@
 from operator import lt
 
-from bcn_rainfall_core.utils import Label
 from bcn_rainfall_core.utils import rainfall_metrics as rain
 from tst.models.test_yearly_rainfall import YEARLY_RAINFALL
 
@@ -25,15 +24,6 @@ class TestMetrics:
         )
 
         assert nb_years <= len(YEARLY_RAINFALL.data)
-
-    @staticmethod
-    def test_get_clusters_number():
-        nb_clusters = rain.get_clusters_number(YEARLY_RAINFALL.data)
-
-        if Label.KMEANS not in YEARLY_RAINFALL.data:
-            assert nb_clusters == 0
-        else:
-            assert nb_clusters > 0
 
     @staticmethod
     def test_get_normal():

@@ -36,10 +36,6 @@ class Label(str, BaseEnum):
 
     YEAR = "Year"
     RAINFALL = "Rainfall"
-    PERCENTAGE_OF_NORMAL = "Percentage of normal"
-    LINEAR_REGRESSION = "Linear regression"
-    SAVITZKY_GOLAY_FILTER = "Savitzky–Golay filter"
-    KMEANS = "K-Means"
 
 
 class TimeMode(BaseEnum):

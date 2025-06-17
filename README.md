@@ -9,6 +9,11 @@
 
 Tools to load and manipulate rainfall data from the city of Barcelona, Catalunya; it is the core of the Barcelona Rainfall project and is exposed through the Barcelona Rainfall API.
 
+## Requirements
+
+- Python 3.12
+- Pip
+
 ## Usage
 
 ```python
@@ -44,5 +49,19 @@ rainfall_avg = rainfall.get_rainfall_average(
 )
 print(rainfall_avg)
 ...
+```
 
+## Tests & Coverage
+
+```commandline
+uv run coverage run -m pytest
+uv run coverage report
+```
+
+## Code quality
+
+```commandline
+uv tool run mypy --check-untyped-defs .
+uv tool run ruff check
+uv tool run ruff format
 ```

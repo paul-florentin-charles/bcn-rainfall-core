@@ -21,7 +21,7 @@ def _get_plotly_trace_by_figure_type(figure_type: str) -> type[BaseTraceType] | 
     return FIGURE_TYPE_TO_PLOTLY_TRACE.get(figure_type.casefold())
 
 
-def _update_plotly_figure_layout(
+def update_plotly_figure_layout(
     figure: go.Figure,
     *,
     title: str,
@@ -91,7 +91,7 @@ def get_figure_of_column_according_to_year(
             )
         )
 
-        _update_plotly_figure_layout(
+        update_plotly_figure_layout(
             figure,
             title=figure_label or label.value,
             xaxis_title=Label.YEAR.value,
@@ -135,7 +135,7 @@ def get_bar_figure_of_rainfall_averages(
 
     figure = go.Figure(go.Bar(x=labels, y=averages, name=time_mode.value.capitalize()))
 
-    _update_plotly_figure_layout(
+    update_plotly_figure_layout(
         figure,
         title=f"Average rainfall (mm) between {begin_year} and {end_year}",
         xaxis_title=time_mode.value.capitalize()[:-2],
@@ -187,11 +187,11 @@ def get_bar_figure_of_rainfall_linreg_slopes(
         )
     )
 
-    _update_plotly_figure_layout(
+    update_plotly_figure_layout(
         figure,
-        title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year) between {begin_year} and {end_year}",
+        title=f"Linear regression slope (mm/year) between {begin_year} and {end_year}",
         xaxis_title=time_mode.value.capitalize()[:-2],
-        yaxis_title=f"{Label.LINEAR_REGRESSION.value} slope (mm/year)",
+        yaxis_title="Linear regression slope (mm/year)",
     )
 
     return figure
@@ -239,7 +239,7 @@ def get_bar_figure_of_relative_distances_to_normal(
         )
     )
 
-    _update_plotly_figure_layout(
+    update_plotly_figure_layout(
         figure,
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)",
         xaxis_title=time_mode.value.capitalize()[:-2],
@@ -315,7 +315,7 @@ def get_pie_figure_of_years_above_and_below_normal(
     elif isinstance(rainfall_instance, models.SeasonalRainfall):
         figure_title = f"{figure_title} for {rainfall_instance.season.value}"
 
-    _update_plotly_figure_layout(
+    update_plotly_figure_layout(
         figure,
         title=f"{figure_title} (%)",
     )

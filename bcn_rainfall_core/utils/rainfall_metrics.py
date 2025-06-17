@@ -44,19 +44,6 @@ def get_years_compared_to_given_rainfall_value(
     return int(yearly_rainfall[Label.YEAR.value].count())
 
 
-def get_clusters_number(yearly_rainfall: pd.DataFrame) -> int:
-    """
-    Computes the number of clusters.
-
-    :param yearly_rainfall: A pandas DataFrame displaying clusters label according to year.
-    :return: The number of clusters as an integer.
-    """
-    if Label.KMEANS not in yearly_rainfall.columns:
-        return 0
-
-    return yearly_rainfall[Label.KMEANS.value].max() + 1
-
-
 def get_normal(
     yearly_rainfall: pd.DataFrame, begin_year, *, round_precision=1
 ) -> float:

@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 
 import bcn_rainfall_core.utils.dataframe_operations as df_ops
-from bcn_rainfall_core.utils import Label, Month
+from bcn_rainfall_core.utils import Month
 from tst.models.test_yearly_rainfall import YEARLY_RAINFALL
 
 
@@ -18,23 +18,6 @@ class TestDataframeOperations:
         )
 
         assert len(cropped_yearly_rainfall) <= end_year - begin_year + 1
-
-    @staticmethod
-    def test_remove_column():
-        removed = df_ops.remove_column(YEARLY_RAINFALL.data, label=Label.YEAR)
-
-        assert Label.YEAR in YEARLY_RAINFALL.data.columns
-        assert not removed
-
-        YEARLY_RAINFALL.add_savgol_filter()
-        removed = df_ops.remove_column(
-            YEARLY_RAINFALL.data, label=Label.SAVITZKY_GOLAY_FILTER
-        )
-
-        assert Label.SAVITZKY_GOLAY_FILTER not in YEARLY_RAINFALL.data.columns
-        assert removed
-
-        YEARLY_RAINFALL.add_savgol_filter()
 
     @staticmethod
     def test_concat_columns():

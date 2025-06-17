@@ -276,9 +276,7 @@ class Rainfall:
         weigh_by_average=False,
     ) -> float | None:
         """
-        Compute the standard deviation of a column specified by its label within DataFrame
-        for a specific year range and time mode.
-        By default, it uses the 'Rainfall' column.
+        Computes rainfall standard deviation for a specific year range and time mode.
 
         :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
         :param begin_year: An integer representing the year
@@ -297,7 +295,7 @@ class Rainfall:
         if entity := self.get_entity_for_time_mode(
             time_mode, month=month, season=season
         ):
-            return entity.get_standard_deviation(
+            return entity.get_rainfall_standard_deviation(
                 begin_year, end_year, weigh_by_average=weigh_by_average
             )
 
@@ -389,6 +387,7 @@ class Rainfall:
         season: Season | None = None,
         plot_average=False,
         plot_linear_regression=False,
+        kmeans_cluster_count: int | None = None,
     ) -> go.Figure | None:
         """
         Return a bar graphic displaying rainfall by year computed upon whole years, specific months or seasons.
@@ -406,6 +405,8 @@ class Rainfall:
         Defaults to False.
         :param plot_linear_regression: Whether to plot linear regression of rainfall or not.
         Defaults to False.
+        :param kmeans_cluster_count: If set, computes K-Mean clustering and displays clusters by color.
+        Defaults to None.
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
         if entity := self.get_entity_for_time_mode(
@@ -416,38 +417,8 @@ class Rainfall:
                 end_year,
                 plot_average=plot_average,
                 plot_linear_regression=plot_linear_regression,
+                kmeans_cluster_count=kmeans_cluster_count,
             )
-
-        return None
-
-    def get_scatter_figure_of_linear_regression(
-        self,
-        time_mode: TimeMode,
-        *,
-        begin_year: int,
-        end_year: int,
-        month: Month | None = None,
-        season: Season | None = None,
-    ) -> go.Figure | None:
-        """
-        Return plotly figure with scatter trace of rainfall linear regression according to year,
-        computed upon whole years, specific months or seasons.
-
-        :param time_mode: A TimeMode Enum: ['yearly', 'monthly', 'seasonal'].
-        :param begin_year: An integer representing the year
-        to start getting our rainfall values.
-        :param end_year: An integer representing the year
-        to end getting our rainfall values.
-        :param month: A Month Enum: ['January', 'February', ..., 'December']
-        Set if time_mode is 'monthly' (optional).
-        :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
-        Set if time_mode is 'seasonal' (optional).
-        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
-        """
-        if entity := self.get_entity_for_time_mode(
-            time_mode, month=month, season=season
-        ):
-            return entity.get_scatter_figure_of_linear_regression(begin_year, end_year)
 
         return None
 

@@ -9,7 +9,6 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 from pydantic import PositiveFloat
-from scipy import signal
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
@@ -282,18 +281,15 @@ class YearlyRainfall:
             self.round_precision,
         )
 
-    def get_standard_deviation(
+    def get_rainfall_standard_deviation(
         self,
         begin_year: int,
         end_year: int,
         *,
-        label: Label | None = Label.RAINFALL,
         weigh_by_average=False,
     ) -> float | None:
         """
-        Compute the standard deviation of a column specified by its label within DataFrame
-        and for an optional time range.
-        By default, it uses the 'Rainfall' column.
+        Compute the rainfall standard deviation.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
@@ -305,10 +301,8 @@ class YearlyRainfall:
         :return: The standard deviation as a float.
         Nothing if the specified column does not exist.
         """
-        if label not in self.data.columns:
-            return None
 
-        data = self.get_yearly_rainfall(begin_year, end_year)[label]
+        data = self.get_yearly_rainfall(begin_year, end_year)[Label.RAINFALL]
 
         standard_deviation = data.std()
         if weigh_by_average:
@@ -329,7 +323,6 @@ class YearlyRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values.
-        If not given, defaults to latest year available.
         :return: a tuple containing a tuple of floats (r2 score, slope)
         and a list of rainfall values computed by the linear regression.
         """
@@ -350,91 +343,32 @@ class YearlyRainfall:
             round(lin_reg.coef_[0], self.round_precision),
         ), predicted_rainfalls
 
-    def add_percentage_of_normal(self, begin_year: int, end_year: int) -> None:
+    def get_kmeans(
+        self, begin_year: int, end_year: int, *, kmeans_cluster_count=4
+    ) -> tuple[int, list[int]]:
         """
-        Add the percentage of rainfall compared with normal
-        to our pandas DataFrame for a specific year range.
+        Compute and return K-Mean clustering of rainfall according to year for a given time interval.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values.
-        :return: None
+        :param kmeans_cluster_count: The number of clusters to compute. Defaults to 4.
+        :return: A tuple (kmeans_clusters, clustered_data) where:
+          - kmeans_clusters is the number of computed clusters as an integer
+          - clustered_data is the list of clusters designed by labels between 0 and kmeans_clusters - 1.
         """
-        normal = self.get_average_yearly_rainfall(begin_year, end_year)
-        if normal == 0.0:
-            return None
-
-        self.data[Label.PERCENTAGE_OF_NORMAL.value] = round(
-            self.data[Label.RAINFALL.value] / normal * 100.0, self.round_precision
-        )
-
-    def add_linear_regression(self) -> tuple[float, float]:
-        """
-        Compute and add Linear Regression of Rainfall according to Year
-        to our pandas DataFrame.
-
-        :return: a tuple containing two floats (r2 score, slope).
-        """
-        years = self.data[Label.YEAR.value].values.reshape(-1, 1)  # type: ignore
-        rainfalls = self.data[Label.RAINFALL.value].values
-
-        reg = LinearRegression()
-        reg.fit(years, rainfalls)
-        self.data[Label.LINEAR_REGRESSION.value] = reg.predict(years)
-        self.data[Label.LINEAR_REGRESSION.value] = round(
-            self.data[Label.LINEAR_REGRESSION.value], self.round_precision
-        )
-
-        return r2_score(
-            rainfalls, self.data[Label.LINEAR_REGRESSION.value].values
-        ), round(reg.coef_[0], self.round_precision)
-
-    def add_savgol_filter(self) -> None:
-        """
-        Compute and add Savitzky–Golay filter to Rainfall according to Year
-        to our pandas DataFrame.
-
-        :return: None
-        """
-        self.data[Label.SAVITZKY_GOLAY_FILTER.value] = signal.savgol_filter(
-            self.data[Label.RAINFALL.value],
-            window_length=len(self.data),
-            polyorder=len(self.data) // 10,
-        )
-
-        self.data[Label.SAVITZKY_GOLAY_FILTER.value] = round(
-            self.data[Label.SAVITZKY_GOLAY_FILTER.value], self.round_precision
-        )
-
-    def add_kmeans(self, kmeans_clusters=4) -> int:
-        """
-        Compute and add K-Mean clustering of Rainfall according to Year
-        to our pandas DataFrame.
-
-        :param kmeans_clusters: The number of clusters to compute. Defaults to 4.
-        :return: The number of computed clusters as an integer
-        """
-        fit_data: np.ndarray = self.data[
+        fit_data: np.ndarray = self.get_yearly_rainfall(begin_year, end_year)[
             [Label.YEAR.value, Label.RAINFALL.value]
         ].values
 
-        kmeans = KMeans(n_init=10, n_clusters=kmeans_clusters)
+        kmeans = KMeans(n_init=10, n_clusters=kmeans_cluster_count)
         kmeans.fit(fit_data)
-        self.data[Label.KMEANS.value] = kmeans.predict(fit_data)
+        clustered_data = [
+            int(cluster_label) for cluster_label in kmeans.predict(fit_data)
+        ]
 
-        return kmeans.n_clusters
-
-    def remove_column(self, label: Label) -> bool:
-        """
-        Remove a column for DataFrame using its label.
-        Removing 'Year' or 'Rainfall' columns is prevented.
-
-        :param label: A string corresponding to an existing column label.
-        :return: A boolean set to whether the operation passed or not.
-        """
-
-        return df_ops.remove_column(self.data, label=label)
+        return kmeans.n_clusters, clustered_data
 
     def get_bar_figure_of_rainfall_according_to_year(
         self,
@@ -445,6 +379,7 @@ class YearlyRainfall:
         trace_label: str | None = None,
         plot_average=False,
         plot_linear_regression=False,
+        kmeans_cluster_count: int | None = None,
     ) -> go.Figure | None:
         """
         Return bar figure of rainfall data according to year.
@@ -461,18 +396,62 @@ class YearlyRainfall:
         Defaults to False.
         :param plot_linear_regression: Whether to plot linear regression of rainfall or not.
         Defaults to False.
+        :param kmeans_cluster_count: If set, computes K-Mean clustering and displays clusters by color.
+        Defaults to None.
+
         :return: A plotly Figure object if data has been successfully plotted, None otherwise.
         """
         yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
 
-        figure = plotly_fig.get_figure_of_column_according_to_year(
-            yearly_rainfall,
-            label=Label.RAINFALL,
-            figure_type="bar",
-            figure_label=figure_label
-            or f"Rainfall (mm) between {begin_year} and {end_year}",
-            trace_label=trace_label,
-        )
+        if kmeans_cluster_count is not None:
+            figure = go.Figure()
+
+            kmeans_cluster_count, clustered_data = self.get_kmeans(
+                begin_year, end_year, kmeans_cluster_count=kmeans_cluster_count
+            )
+
+            yearly_rainfall_labeled_by_cluster = list(
+                zip(
+                    yearly_rainfall[Label.YEAR.value],
+                    yearly_rainfall[Label.RAINFALL.value],
+                    clustered_data,
+                )
+            )
+
+            for cluster_label in range(kmeans_cluster_count):
+                year_list, rainfall_list = zip(
+                    *[
+                        (year, rainfall)
+                        for year, rainfall, cluster_label_ in yearly_rainfall_labeled_by_cluster
+                        if cluster_label_ == cluster_label
+                    ]
+                )
+
+                figure.add_trace(
+                    go.Bar(
+                        x=year_list,
+                        y=rainfall_list,
+                        name=f"Cluster {cluster_label}",
+                    )
+                )
+
+                plotly_fig.update_plotly_figure_layout(
+                    figure,
+                    title=figure_label
+                    or f"Rainfall (mm) between {begin_year} and {end_year}",
+                    xaxis_title=Label.YEAR.value,
+                    yaxis_title=Label.RAINFALL.value,
+                )
+        else:
+            figure = plotly_fig.get_figure_of_column_according_to_year(
+                yearly_rainfall,
+                label=Label.RAINFALL,
+                figure_type="bar",
+                figure_label=figure_label
+                or f"Rainfall (mm) between {begin_year} and {end_year}",
+                trace_label=trace_label,
+            )
+
         if figure:
             if plot_average:
                 average_rainfall = self.get_average_yearly_rainfall(
@@ -497,98 +476,12 @@ class YearlyRainfall:
                     go.Scatter(
                         x=yearly_rainfall[Label.YEAR.value],
                         y=linear_regression_values,
-                        name=f"{Label.LINEAR_REGRESSION.value}"
+                        name="Linear regression"
                         f"<br><i>R2 score:</i> <b>{round(r2, 2)}</b>"
                         f"<br><i>slope:</i> {slope} mm/year",
                     )
                 )
 
             figure.update_yaxes(title_text=f"{Label.RAINFALL.value} (mm)")
-
-        return figure
-
-    def get_scatter_figure_of_linear_regression(
-        self,
-        begin_year: int,
-        end_year: int,
-    ) -> go.Figure | None:
-        """
-        Return plotly figure with scatter trace of rainfall linear regression according to year.
-
-        :param begin_year: An integer representing the year
-        to start getting our rainfall values.
-        :param end_year: An integer representing the year
-        to end getting our rainfall values.
-        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
-        """
-        (r2, slope), predicted_rainfalls = self.get_linear_regression(
-            begin_year, end_year
-        )
-
-        yearly_rainfall = self.get_yearly_rainfall(begin_year, end_year)
-        yearly_rainfall[Label.LINEAR_REGRESSION.value] = predicted_rainfalls
-
-        figure = plotly_fig.get_figure_of_column_according_to_year(
-            yearly_rainfall,
-            Label.LINEAR_REGRESSION,
-            figure_type="scatter",
-            figure_label=f"{Label.LINEAR_REGRESSION.value}"
-            f"<br><i>R2 score:</i> <b>{round(r2, 2)}</b>"
-            f"<br><i>slope:</i> {slope} mm/year",
-        )
-
-        return figure
-
-    def get_scatter_figure_of_savgol_filter(self) -> go.Figure | None:
-        """
-        Return plotly figure with scatter trace of Savitzky-Golay filter according to year.
-
-        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
-        """
-
-        return plotly_fig.get_figure_of_column_according_to_year(
-            self.data,
-            Label.SAVITZKY_GOLAY_FILTER,
-            figure_type="scatter",
-            figure_label=f"{Label.SAVITZKY_GOLAY_FILTER.value} (mm)",
-        )
-
-    def get_scatter_figure_of_normal(self, display_clusters=False) -> go.Figure | None:
-        """
-        Return plotly figure with horizontal line of normal rainfall according to year and scatter rainfall values.
-
-        :param display_clusters: Whether to display clusters computed with k-means or not.
-        Defaults to False (optional).
-        :return: A plotly Figure object if data has been successfully plotted, None otherwise.
-        """
-
-        figure = go.Figure(
-            go.Scatter(
-                x=self.data[Label.YEAR.value],
-                y=[100.0] * len(self.data),
-                name="Normal rainfall (%)",
-            )
-        )
-
-        if not display_clusters:
-            if fig_normal := plotly_fig.get_figure_of_column_according_to_year(
-                self.data, Label.PERCENTAGE_OF_NORMAL, figure_type="scatter"
-            ):
-                figure.add_traces(list(fig_normal.select_traces()))
-            else:
-                return None
-        else:
-            for label_value in range(rain.get_clusters_number(self.data)):
-                if (
-                    fig_normal_kmeans_subplot
-                    := plotly_fig.get_figure_of_column_according_to_year(
-                        self.data[self.data[Label.KMEANS.value] == label_value],
-                        Label.PERCENTAGE_OF_NORMAL,
-                        figure_type="scatter",
-                    )
-                ):
-                    figure.add_traces(list(fig_normal_kmeans_subplot.select_traces()))
-                else:
-                    return None
 
         return figure

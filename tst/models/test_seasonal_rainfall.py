@@ -96,22 +96,13 @@ class TestMonthlyRainfall:
 
     @staticmethod
     def test_get_standard_deviation():
-        std = SEASONAL_RAINFALL.get_standard_deviation(
+        std = SEASONAL_RAINFALL.get_rainfall_standard_deviation(
             SEASONAL_RAINFALL.starting_year, SEASONAL_RAINFALL.get_last_year()
         )
 
         assert isinstance(std, float)
 
-        SEASONAL_RAINFALL.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
-        std_none = SEASONAL_RAINFALL.get_standard_deviation(
-            SEASONAL_RAINFALL.starting_year,
-            SEASONAL_RAINFALL.get_last_year(),
-            label=Label.SAVITZKY_GOLAY_FILTER,
-        )
-
-        assert std_none is None
-
-        std_weighted_by_avg = SEASONAL_RAINFALL.get_standard_deviation(
+        std_weighted_by_avg = SEASONAL_RAINFALL.get_rainfall_standard_deviation(
             SEASONAL_RAINFALL.starting_year,
             SEASONAL_RAINFALL.get_last_year(),
             weigh_by_average=True,
@@ -132,66 +123,28 @@ class TestMonthlyRainfall:
         assert len(linear_regression_values) == end_year - begin_year + 1
 
     @staticmethod
-    def test_add_percentage_of_normal():
-        SEASONAL_RAINFALL.add_percentage_of_normal(
-            SEASONAL_RAINFALL.starting_year, SEASONAL_RAINFALL.get_last_year()
-        )
-
-        assert Label.PERCENTAGE_OF_NORMAL in SEASONAL_RAINFALL.data
-
-    @staticmethod
-    def test_add_linear_regression():
-        SEASONAL_RAINFALL.add_linear_regression()
-
-        assert Label.LINEAR_REGRESSION in SEASONAL_RAINFALL.data
-
-    @staticmethod
-    def test_add_savgol_filter():
-        SEASONAL_RAINFALL.add_savgol_filter()
-
-        assert Label.SAVITZKY_GOLAY_FILTER in SEASONAL_RAINFALL.data
-
-    @staticmethod
-    def test_add_kmeans():
+    def test_get_kmeans():
         kmeans_clusters = 5
-        n_clusters = SEASONAL_RAINFALL.add_kmeans(kmeans_clusters)
+        n_clusters, predict_data = SEASONAL_RAINFALL.get_kmeans(
+            begin_year, end_year, kmeans_cluster_count=kmeans_clusters
+        )
 
         assert n_clusters == kmeans_clusters
-        assert Label.KMEANS in SEASONAL_RAINFALL.data
+        assert isinstance(predict_data, list)
+        assert len(predict_data) == end_year - begin_year + 1
+
+        for cluster_label in predict_data:
+            assert isinstance(cluster_label, int)
+            assert 0 <= cluster_label < kmeans_clusters
 
     @staticmethod
-    def test_remove_column():
-        removed = SEASONAL_RAINFALL.remove_column(Label.YEAR)
-
-        assert Label.YEAR in SEASONAL_RAINFALL.data.columns
-        assert not removed
-
-        removed = SEASONAL_RAINFALL.remove_column(Label.SAVITZKY_GOLAY_FILTER)
-
-        assert Label.SAVITZKY_GOLAY_FILTER not in SEASONAL_RAINFALL.data.columns
-        assert removed
-
-        SEASONAL_RAINFALL.add_savgol_filter()
-
-    @staticmethod
-    def test_get_various_plotly_figures():
+    def test_get_bar_figure_of_rainfall_according_to_year():
         bar_fig = SEASONAL_RAINFALL.get_bar_figure_of_rainfall_according_to_year(
-            begin_year, end_year
+            begin_year,
+            end_year,
+            plot_average=True,
+            plot_linear_regression=True,
+            kmeans_cluster_count=4,
         )
+
         assert isinstance(bar_fig, go.Figure)
-
-        scatter_fig = SEASONAL_RAINFALL.get_scatter_figure_of_linear_regression(
-            begin_year, end_year
-        )
-        assert isinstance(scatter_fig, go.Figure)
-
-        scatter_fig = SEASONAL_RAINFALL.get_scatter_figure_of_savgol_filter()
-        assert isinstance(scatter_fig, go.Figure)
-
-    @staticmethod
-    def test_get_scatter_figure_of_normal():
-        figure = SEASONAL_RAINFALL.get_scatter_figure_of_normal()
-        assert isinstance(figure, go.Figure)
-
-        figure = SEASONAL_RAINFALL.get_scatter_figure_of_normal(display_clusters=True)
-        assert isinstance(figure, go.Figure)

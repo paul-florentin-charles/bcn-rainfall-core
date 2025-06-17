@@ -30,24 +30,6 @@ def get_rainfall_within_year_interval(
     return yearly_rainfall[yearly_rainfall[Label.YEAR.value] >= begin_year]
 
 
-def remove_column(yearly_rainfall: pd.DataFrame, *, label: Label) -> bool:
-    """
-    Remove a column from a DataFrame using its label.
-    Removing 'Year' or 'Rainfall' columns is prevented.
-
-    :param yearly_rainfall: A pandas DataFrame displaying rainfall data
-    under various shapes according to year.
-    :param label: A string corresponding to an existing column label.
-    :return: A boolean set to whether the operation passed or not.
-    """
-    if label not in yearly_rainfall.columns.drop([Label.YEAR, Label.RAINFALL]):
-        return False
-
-    yearly_rainfall.pop(label.value)
-
-    return True
-
-
 def concat_columns(data_frames: list[pd.DataFrame | pd.Series]) -> pd.DataFrame:
     """
     Concatenate pandas DataFrame objects along the column axis.

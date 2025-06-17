@@ -115,22 +115,13 @@ class TestYearlyRainfall:
 
     @staticmethod
     def test_get_standard_deviation():
-        std = YEARLY_RAINFALL.get_standard_deviation(
+        std = YEARLY_RAINFALL.get_rainfall_standard_deviation(
             YEARLY_RAINFALL.starting_year, YEARLY_RAINFALL.get_last_year()
         )
 
         assert isinstance(std, float)
 
-        YEARLY_RAINFALL.remove_column(label=Label.SAVITZKY_GOLAY_FILTER)
-        std_none = YEARLY_RAINFALL.get_standard_deviation(
-            YEARLY_RAINFALL.starting_year,
-            YEARLY_RAINFALL.get_last_year(),
-            label=Label.SAVITZKY_GOLAY_FILTER,
-        )
-
-        assert std_none is None
-
-        std_weighted_by_avg = YEARLY_RAINFALL.get_standard_deviation(
+        std_weighted_by_avg = YEARLY_RAINFALL.get_rainfall_standard_deviation(
             YEARLY_RAINFALL.starting_year,
             YEARLY_RAINFALL.get_last_year(),
             weigh_by_average=True,
@@ -151,82 +142,28 @@ class TestYearlyRainfall:
         assert len(linear_regression_values) == end_year - begin_year + 1
 
     @staticmethod
-    def test_add_percentage_of_normal():
-        YEARLY_RAINFALL.add_percentage_of_normal(
-            YEARLY_RAINFALL.starting_year, YEARLY_RAINFALL.get_last_year()
-        )
-
-        assert Label.PERCENTAGE_OF_NORMAL in YEARLY_RAINFALL.data
-
-        YEARLY_RAINFALL.remove_column(Label.PERCENTAGE_OF_NORMAL)
-
-    @staticmethod
-    def test_add_linear_regression():
-        YEARLY_RAINFALL.add_linear_regression()
-
-        assert Label.LINEAR_REGRESSION in YEARLY_RAINFALL.data
-
-        YEARLY_RAINFALL.remove_column(Label.LINEAR_REGRESSION)
-
-    @staticmethod
-    def test_add_savgol_filter():
-        YEARLY_RAINFALL.add_savgol_filter()
-
-        assert Label.SAVITZKY_GOLAY_FILTER in YEARLY_RAINFALL.data
-
-        YEARLY_RAINFALL.remove_column(Label.SAVITZKY_GOLAY_FILTER)
-
-    @staticmethod
-    def test_add_kmeans():
+    def test_get_kmeans():
         kmeans_clusters = 5
-        n_clusters = YEARLY_RAINFALL.add_kmeans(kmeans_clusters)
+        n_clusters, predict_data = YEARLY_RAINFALL.get_kmeans(
+            begin_year, end_year, kmeans_cluster_count=kmeans_clusters
+        )
 
         assert n_clusters == kmeans_clusters
-        assert Label.KMEANS in YEARLY_RAINFALL.data
+        assert isinstance(predict_data, list)
+        assert len(predict_data) == end_year - begin_year + 1
 
-        YEARLY_RAINFALL.remove_column(Label.KMEANS)
-
-    @staticmethod
-    def test_remove_column():
-        removed = YEARLY_RAINFALL.remove_column(Label.YEAR)
-
-        assert Label.YEAR in YEARLY_RAINFALL.data.columns
-        assert not removed
-
-        YEARLY_RAINFALL.add_savgol_filter()
-
-        removed = YEARLY_RAINFALL.remove_column(Label.SAVITZKY_GOLAY_FILTER)
-
-        assert Label.SAVITZKY_GOLAY_FILTER not in YEARLY_RAINFALL.data.columns
-        assert removed
+        for cluster_label in predict_data:
+            assert isinstance(cluster_label, int)
+            assert 0 <= cluster_label < kmeans_clusters
 
     @staticmethod
-    def test_get_various_plotly_figures():
+    def test_get_bar_figure_of_rainfall_according_to_year():
         bar_fig = YEARLY_RAINFALL.get_bar_figure_of_rainfall_according_to_year(
-            begin_year, end_year
+            begin_year,
+            end_year,
+            plot_average=True,
+            plot_linear_regression=True,
+            kmeans_cluster_count=4,
         )
+
         assert isinstance(bar_fig, go.Figure)
-
-        scatter_fig = YEARLY_RAINFALL.get_scatter_figure_of_linear_regression(
-            begin_year, end_year
-        )
-        assert isinstance(scatter_fig, go.Figure)
-
-        YEARLY_RAINFALL.add_savgol_filter()
-
-        scatter_fig = YEARLY_RAINFALL.get_scatter_figure_of_savgol_filter()
-        assert isinstance(scatter_fig, go.Figure)
-
-        YEARLY_RAINFALL.remove_column(Label.SAVITZKY_GOLAY_FILTER)
-
-    @staticmethod
-    def test_get_scatter_figure_of_normal():
-        YEARLY_RAINFALL.add_percentage_of_normal(begin_year, end_year)
-
-        figure = YEARLY_RAINFALL.get_scatter_figure_of_normal()
-        assert isinstance(figure, go.Figure)
-
-        figure = YEARLY_RAINFALL.get_scatter_figure_of_normal(display_clusters=True)
-        assert isinstance(figure, go.Figure)
-
-        YEARLY_RAINFALL.remove_column(Label.PERCENTAGE_OF_NORMAL)

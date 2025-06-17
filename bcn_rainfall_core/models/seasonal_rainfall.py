@@ -50,6 +50,7 @@ class SeasonalRainfall(YearlyRainfall):
         trace_label: str | None = None,
         plot_average=False,
         plot_linear_regression=False,
+        kmeans_cluster_count: int | None = None,
     ) -> go.Figure | None:
         """
         Overrides parent method by customizing figure and trace labels.
@@ -62,4 +63,5 @@ class SeasonalRainfall(YearlyRainfall):
             trace_label=f"{self.season.value.capitalize()} rainfall",
             plot_average=plot_average,
             plot_linear_regression=plot_linear_regression,
+            kmeans_cluster_count=kmeans_cluster_count,
         )

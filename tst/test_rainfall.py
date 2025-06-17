@@ -5,7 +5,7 @@ from bcn_rainfall_core import Rainfall
 from bcn_rainfall_core.models import MonthlyRainfall, SeasonalRainfall, YearlyRainfall
 from bcn_rainfall_core.utils import Label, Month, Season, TimeMode
 
-RAINFALL = Rainfall.from_config()
+RAINFALL = Rainfall.from_config(from_file=True)
 
 normal_year = 1971
 begin_year = 1991

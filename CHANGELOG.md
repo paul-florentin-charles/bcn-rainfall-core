@@ -1,5 +1,13 @@
 ## Changelog
 
+### v1.0.5
+_19/06/2025_
+
+- Allow displaying of x-axis range slider for *Plotly* graphs.
+- Add a new bar graphic depicting standard deviations of rainfall.
+- Clean up some docstrings.
+- Increase default `round_precision` value from 1 to 2 in `config.yml`.
+
 ### v1.0.4
 _17/06/2025_
 

@@ -98,6 +98,27 @@ class TestPlotting:
         assert isinstance(figure, go.Figure)
 
     @staticmethod
+    def test_get_bar_figure_of_standard_deviations():
+        figure = plotly_fig.get_bar_figure_of_standard_deviations(
+            RAINFALL.monthly_rainfalls,
+            time_mode=TimeMode.MONTHLY,
+            begin_year=begin_year,
+            end_year=end_year,
+        )
+
+        assert isinstance(figure, go.Figure)
+
+        figure = plotly_fig.get_bar_figure_of_standard_deviations(
+            RAINFALL.seasonal_rainfalls,
+            time_mode=TimeMode.SEASONAL,
+            begin_year=begin_year,
+            end_year=end_year,
+            weigh_by_average=True,
+        )
+
+        assert isinstance(figure, go.Figure)
+
+    @staticmethod
     def test_get_pie_figure_of_years_above_and_below_normal():
         figure = plotly_fig.get_pie_figure_of_years_above_and_below_normal(
             RAINFALL.monthly_rainfalls[Month.SEPTEMBER.value],

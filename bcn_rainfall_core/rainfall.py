@@ -473,7 +473,6 @@ class Rainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values.
-        Is set to last year available is None.
         :return: A Plotly figure of the rainfall LinReg slopes for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
@@ -513,7 +512,6 @@ class Rainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values.
-        Is set to last year available is None.
         :return: A Plotly figure of the rainfall relative distances to normal (%) for each month or season.
         None if time_mode is not within {'monthly', 'seasonal'}.
         """
@@ -534,6 +532,46 @@ class Rainfall:
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
+        )
+
+    def get_bar_figure_of_standard_deviations(
+        self,
+        time_mode: TimeMode,
+        *,
+        begin_year: int,
+        end_year: int,
+        weigh_by_average=False,
+    ) -> go.Figure | None:
+        """
+        Return a bar graphic displaying standard deviations for each month or each season.
+
+        :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values.
+        :param bool weigh_by_average: Whether to divide standard deviation by average or not (optional).
+        Defaults to False.
+        :return: A Plotly figure of the rainfall standard deviations (mm) for each month or season.
+        None if time_mode is not within {'monthly', 'seasonal'}.
+        """
+        if time_mode == TimeMode.YEARLY:
+            return None
+
+        rainfall_instance_by_label: (
+            dict[str, models.MonthlyRainfall] | dict[str, models.SeasonalRainfall]
+        ) = {}
+        if time_mode == TimeMode.MONTHLY:
+            rainfall_instance_by_label = self.monthly_rainfalls
+        elif time_mode == TimeMode.SEASONAL:
+            rainfall_instance_by_label = self.seasonal_rainfalls
+
+        return plotly_fig.get_bar_figure_of_standard_deviations(
+            rainfall_instance_by_label,
+            time_mode=time_mode,
+            begin_year=begin_year,
+            end_year=end_year,
+            weigh_by_average=weigh_by_average,
         )
 
     def get_pie_figure_of_years_above_and_below_normal(

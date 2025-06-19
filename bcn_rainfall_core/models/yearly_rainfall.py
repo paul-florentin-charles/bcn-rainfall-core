@@ -287,7 +287,7 @@ class YearlyRainfall:
         end_year: int,
         *,
         weigh_by_average=False,
-    ) -> float | None:
+    ) -> float:
         """
         Compute the rainfall standard deviation.
 
@@ -295,8 +295,7 @@ class YearlyRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values.
-        :param label: A string corresponding to an existing column label (optional).
-        :param bool weigh_by_average: whether to divide standard deviation by average or not (optional).
+        :param bool weigh_by_average: Whether to divide standard deviation by average or not (optional).
         Defaults to False.
         :return: The standard deviation as a float.
         Nothing if the specified column does not exist.
@@ -323,7 +322,7 @@ class YearlyRainfall:
         to start getting our rainfall values.
         :param end_year: An integer representing the year
         to end getting our rainfall values.
-        :return: a tuple containing a tuple of floats (r2 score, slope)
+        :return: A tuple containing a tuple of floats (r2 score, slope)
         and a list of rainfall values computed by the linear regression.
         """
         data = self.get_yearly_rainfall(begin_year, end_year)
@@ -382,7 +381,7 @@ class YearlyRainfall:
         kmeans_cluster_count: int | None = None,
     ) -> go.Figure | None:
         """
-        Return bar figure of rainfall data according to year.
+        Return a bar figure of rainfall data according to year.
 
         :param begin_year: An integer representing the year
         to start getting our rainfall values.
@@ -431,7 +430,7 @@ class YearlyRainfall:
                     go.Bar(
                         x=year_list,
                         y=rainfall_list,
-                        name=f"Cluster {cluster_label}",
+                        name=f"Cluster {cluster_label + 1}",
                     )
                 )
 
@@ -441,6 +440,7 @@ class YearlyRainfall:
                     or f"Rainfall (mm) between {begin_year} and {end_year}",
                     xaxis_title=Label.YEAR.value,
                     yaxis_title=Label.RAINFALL.value,
+                    display_xaxis_range_slider=True,
                 )
         else:
             figure = plotly_fig.get_figure_of_column_according_to_year(

@@ -27,6 +27,7 @@ def update_plotly_figure_layout(
     title: str,
     xaxis_title: str | None = None,
     yaxis_title: str | None = None,
+    display_xaxis_range_slider=False,
 ):
     figure.update_layout(
         title=title,
@@ -45,6 +46,9 @@ def update_plotly_figure_layout(
         paper_bgcolor="rgba(34, 34, 34, 0.6)",
         plot_bgcolor="rgba(123, 104, 75, 0.3)",
         margin={"t": 65, "r": 65, "b": 70, "l": 75},
+        xaxis={
+            "rangeslider_visible": display_xaxis_range_slider,
+        },
         autosize=True,
     )
 
@@ -96,6 +100,7 @@ def get_figure_of_column_according_to_year(
             title=figure_label or label.value,
             xaxis_title=Label.YEAR.value,
             yaxis_title=label.value,
+            display_xaxis_range_slider=True,
         )
 
         return figure
@@ -244,6 +249,61 @@ def get_bar_figure_of_relative_distances_to_normal(
         title=f"Relative distance to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year} (%)",
         xaxis_title=time_mode.value.capitalize()[:-2],
         yaxis_title="Relative distance to normal (%)",
+    )
+
+    return figure
+
+
+def get_bar_figure_of_standard_deviations(
+    rainfall_instance_by_label: dict[str, "models.MonthlyRainfall"]
+    | dict[str, "models.SeasonalRainfall"],
+    *,
+    time_mode: TimeMode,
+    begin_year: int,
+    end_year: int,
+    weigh_by_average=False,
+) -> go.Figure:
+    """
+    Return plotly bar figure displaying standard deviations for each month or for each season passed through the dict.
+
+    :param rainfall_instance_by_label: A dict of months respectively mapped with instances of MonthlyRainfall
+    or a dict of seasons respectively mapped with instances of SeasonalRainfall.
+    :param time_mode: A TimeMode Enum: ['monthly', 'seasonal'].
+    :param begin_year: An integer representing the year
+    to start getting our rainfall values.
+    :param end_year: An integer representing the year
+    to end getting our rainfall values.
+    :param bool weigh_by_average: Whether to divide standard deviation by average or not (optional).
+    Defaults to False.
+    :return: A plotly Figure object of the rainfall standard deviations for each month or for each season.
+    """
+    labels: list[str] = []
+    standard_deviations: list[float | None] = []
+    for label, rainfall_instance in rainfall_instance_by_label.items():
+        labels.append(label)
+
+        standard_deviation = rainfall_instance.get_rainfall_standard_deviation(
+            begin_year, end_year, weigh_by_average=weigh_by_average
+        )
+        if weigh_by_average:
+            standard_deviation *= 100
+
+        standard_deviations.append(standard_deviation)
+
+    figure = go.Figure(
+        go.Bar(
+            x=labels,
+            y=standard_deviations,
+            name=time_mode.value.capitalize(),
+        )
+    )
+
+    title_suffix = "weighted by average (%)" if weigh_by_average else "(mm)"
+    update_plotly_figure_layout(
+        figure,
+        title=f"Standard deviations between {begin_year} and {end_year} {title_suffix}",
+        xaxis_title=time_mode.value.capitalize()[:-2],
+        yaxis_title=f"Standard deviation {title_suffix}",
     )
 
     return figure

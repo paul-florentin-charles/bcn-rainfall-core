@@ -60,7 +60,7 @@ class SeasonalRainfall(YearlyRainfall):
             end_year,
             figure_label=figure_label
             or f"Rainfall (mm) for {self.season.value} between {begin_year} and {end_year}",
-            trace_label=f"{self.season.value.capitalize()} rainfall",
+            trace_label=f"{self.season.value.capitalize()}",
             plot_average=plot_average,
             plot_linear_regression=plot_linear_regression,
             kmeans_cluster_count=kmeans_cluster_count,

@@ -355,6 +355,15 @@ def get_pie_figure_of_years_above_and_below_normal(
         "Years below 50% of normal": "darkred",
     }
 
+    figure_title = f"Years compared to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year}"
+    figure_label = "Percentage of years compared to normal"
+    if isinstance(rainfall_instance, models.MonthlyRainfall):
+        figure_title = f"{figure_title} for {rainfall_instance.month.value}"
+        figure_label = f"{figure_label} for {rainfall_instance.month.value}"
+    elif isinstance(rainfall_instance, models.SeasonalRainfall):
+        figure_title = f"{figure_title} for {rainfall_instance.season.value}"
+        figure_label = f"{figure_label} for {rainfall_instance.season.value}"
+
     figure = go.Figure(
         go.Pie(
             labels=list(color_map.keys()),
@@ -364,16 +373,12 @@ def get_pie_figure_of_years_above_and_below_normal(
                 years_below_normal - years_below_50_percent_of_normal,
                 years_below_50_percent_of_normal,
             ],
+            name=figure_label,
             marker={"colors": list(color_map.values())},
+            scalegroup="one",
             sort=False,
         )
     )
-
-    figure_title = f"Years compared to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year}"
-    if isinstance(rainfall_instance, models.MonthlyRainfall):
-        figure_title = f"{figure_title} for {rainfall_instance.month.value}"
-    elif isinstance(rainfall_instance, models.SeasonalRainfall):
-        figure_title = f"{figure_title} for {rainfall_instance.season.value}"
 
     update_plotly_figure_layout(
         figure,

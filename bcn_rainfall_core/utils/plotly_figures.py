@@ -45,7 +45,7 @@ def update_plotly_figure_layout(
         },
         paper_bgcolor="rgba(34, 34, 34, 0.6)",
         plot_bgcolor="rgba(123, 104, 75, 0.3)",
-        margin={"t": 65, "r": 65, "b": 70, "l": 75},
+        margin={"t": 65, "r": 30, "b": 45, "l": 55},
         xaxis={
             "rangeslider_visible": display_xaxis_range_slider,
         },

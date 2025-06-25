@@ -382,7 +382,7 @@ def get_pie_figure_of_years_above_and_below_normal(
 
     update_plotly_figure_layout(
         figure,
-        title=f"{figure_title} (%)",
+        title=figure_title,
     )
 
     return figure

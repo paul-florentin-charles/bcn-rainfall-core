@@ -606,7 +606,7 @@ class Rainfall:
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
-        :percentages_of_normal: A tuple of floats greater than 0 to decide which slices of normal's percentages
+        :param percentages_of_normal: A tuple of floats greater than 0 to decide which slices of normal's percentages
         we display. E.g., if (0, 50, 100, 150, float("inf")) is given, we display years whose rainfall is:
         1. Below 50 % of normal rainfall.
         2. Between 50 and 100 % of normal rainfall.

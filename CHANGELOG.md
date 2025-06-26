@@ -1,5 +1,11 @@
 ## Changelog
 
+### v1.0.6
+_26/06/2025_
+
+- Customize pie chart percentages of normal via `percentages_of_normal` parameter.
+- Shorten some figure labels and default margins.
+
 ### v1.0.5
 _19/06/2025_
 

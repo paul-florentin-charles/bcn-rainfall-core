@@ -120,20 +120,17 @@ class TestPlotting:
 
     @staticmethod
     def test_get_pie_figure_of_years_above_and_below_normal():
-        figure = plotly_fig.get_pie_figure_of_years_above_and_below_normal(
+        for rainfall_instance in [
             RAINFALL.monthly_rainfalls[Month.SEPTEMBER.value],
-            normal_year=normal_year,
-            begin_year=begin_year,
-            end_year=end_year,
-        )
-
-        assert isinstance(figure, go.Figure)
-
-        figure = plotly_fig.get_pie_figure_of_years_above_and_below_normal(
             RAINFALL.seasonal_rainfalls[Season.WINTER.value],
-            normal_year=normal_year,
-            begin_year=begin_year,
-            end_year=end_year,
-        )
+        ]:
+            for percentages_of_normal in [(0, 50, 150, float("inf")), (75, 125)]:
+                figure = plotly_fig.get_pie_figure_of_years_above_and_below_normal(
+                    rainfall_instance,
+                    normal_year=normal_year,
+                    begin_year=begin_year,
+                    end_year=end_year,
+                    percentages_of_normal=percentages_of_normal,
+                )
 
-        assert isinstance(figure, go.Figure)
+                assert isinstance(figure, go.Figure)

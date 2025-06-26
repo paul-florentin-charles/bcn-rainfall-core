@@ -177,6 +177,41 @@ class YearlyRainfall:
             comparator=opr.lt,
         )
 
+    def get_years_between_two_percentages_of_normal(
+        self,
+        normal_year: int,
+        begin_year: int,
+        end_year: int,
+        *,
+        percentages: tuple[PositiveFloat, PositiveFloat],
+    ) -> int:
+        """
+        Computes the count of years within a specific year range that are above
+        the percentage of a rainfall normal computed from a given normal year.
+
+        :param normal_year: An integer representing the year
+        to start computing the 30 years normal of the rainfall.
+        :param begin_year: An integer representing the year
+        to start getting our rainfall values.
+        :param end_year: An integer representing the year
+        to end getting our rainfall values.
+        :param percentages: A two-long tuple of rainfall normal percentages to compare against.
+        It is always sorted by the function.
+
+        :return: The count of years whose rainfall is in-between both given percentages of rainfall normal.
+        """
+
+        sorted_percentages = sorted(percentages)
+
+        years_above_first_percentage = self.get_years_above_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=sorted_percentages[0]
+        )
+        years_above_second_percentage = self.get_years_above_percentage_of_normal(
+            normal_year, begin_year, end_year, percentage=sorted_percentages[1]
+        )
+
+        return years_above_first_percentage - years_above_second_percentage
+
     def get_years_below_normal(
         self, normal_year: int, begin_year: int, end_year: int
     ) -> int:

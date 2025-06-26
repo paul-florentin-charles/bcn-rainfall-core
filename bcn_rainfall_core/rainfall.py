@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objs as go
+from pydantic import PositiveFloat
 
 import bcn_rainfall_core.models as models
 from bcn_rainfall_core.utils import DataSettings, Month, Season, TimeMode
@@ -583,6 +584,12 @@ class Rainfall:
         end_year: int,
         month: Month | None = None,
         season: Season | None = None,
+        percentages_of_normal: tuple[PositiveFloat, ...] = (
+            0,
+            80,
+            120,
+            float("inf"),
+        ),
     ) -> go.Figure | None:
         """
         Return plotly pie figure displaying the percentage of years above and below normal for the given time mode,
@@ -599,6 +606,13 @@ class Rainfall:
         Set if time_mode is 'monthly' (optional).
         :param season: A Season Enum: ['winter', 'spring', 'summer', 'fall'].
         Set if time_mode is 'seasonal' (optional).
+        :percentages_of_normal: A tuple of floats greater than 0 to decide which slices of normal's percentages
+        we display. E.g., if (0, 50, 100, 150, float("inf")) is given, we display years whose rainfall is:
+        1. Below 50 % of normal rainfall.
+        2. Between 50 and 100 % of normal rainfall.
+        3. Between 100 and 150 of normal rainfall.
+        4. Above 150 % of normal rainfall.
+        Defaults to (0, 80, 120, float("inf")).
         :return: A plotly Figure object of the percentage of years above and below normal as a pie chart.
         None if time_mode is 'monthly' but 'month' is None or if time_mode is 'seasonal' but 'season' is None.
         """
@@ -623,6 +637,7 @@ class Rainfall:
             normal_year=normal_year,
             begin_year=begin_year,
             end_year=end_year,
+            percentages_of_normal=percentages_of_normal,
         )
 
     def get_entity_for_time_mode(

@@ -5,8 +5,10 @@ Provides useful functions for plotting rainfall data in all shapes.
 from typing import Union
 
 import pandas as pd
+import plotly.express as px
 import plotly.graph_objs as go
 from plotly.basedatatypes import BaseTraceType
+from pydantic import PositiveFloat
 
 import bcn_rainfall_core.models as models
 from bcn_rainfall_core.utils import Label, TimeMode
@@ -317,7 +319,13 @@ def get_pie_figure_of_years_above_and_below_normal(
     normal_year: int,
     begin_year: int,
     end_year: int,
-) -> go.Figure:
+    percentages_of_normal: tuple[PositiveFloat, ...] = (
+        0,
+        80,
+        120,
+        float("inf"),
+    ),
+) -> go.Figure | None:
     """
     Return plotly pie figure displaying the percentage of years above and below normal for the given time mode,
     between the given years, and for the normal computed from the given year.
@@ -329,31 +337,47 @@ def get_pie_figure_of_years_above_and_below_normal(
     to start getting our rainfall values.
     :param end_year: An integer representing the year
     to end getting our rainfall values.
+    :percentages_of_normal: A tuple of floats greater than 0 to decide which slices of normal's percentages
+    we display. E.g., if (0, 50, 100, 150, float("inf")) is given, we display years whose rainfall is:
+    1. Below 50 % of normal rainfall.
+    2. Between 50 and 100 % of normal rainfall.
+    3. Between 100 and 150 of normal rainfall.
+    4. Above 150 % of normal rainfall.
+    Defaults to (0, 80, 120, float("inf")).
     :return: A plotly Figure object of the percentage of years above and below normal as a pie chart.
+    None if percentages_of_normal tuple has less than 2 values;
     """
-    years_above_normal = rainfall_instance.get_years_above_normal(
-        normal_year, begin_year, end_year
-    )
-    years_above_150_percent_of_normal = (
-        rainfall_instance.get_years_above_percentage_of_normal(
-            normal_year, begin_year, end_year, percentage=150
-        )
-    )
-    years_below_normal = rainfall_instance.get_years_below_normal(
-        normal_year, begin_year, end_year
-    )
-    years_below_50_percent_of_normal = (
-        rainfall_instance.get_years_below_percentage_of_normal(
-            normal_year, begin_year, end_year, percentage=50
-        )
-    )
+    if len(percentages_of_normal) < 2:
+        return None
 
-    color_map: dict[str, str] = {
-        "Years above 150% of normal": "darkblue",
-        "Years between 150% and 100% of normal": "dodgerblue",
-        "Years between 100% and 50% of normal": "crimson",
-        "Years below 50% of normal": "darkred",
-    }
+    sorted_percentages_of_normal = sorted(percentages_of_normal)
+
+    values: list[float] = []
+    labels: list[str] = []
+    for idx in range(len(sorted_percentages_of_normal) - 1):
+        percentage_1 = sorted_percentages_of_normal[idx]
+        percentage_2 = sorted_percentages_of_normal[idx + 1]
+
+        values.append(
+            rainfall_instance.get_years_between_two_percentages_of_normal(
+                normal_year,
+                begin_year,
+                end_year,
+                percentages=(
+                    percentage_1,
+                    percentage_2,
+                ),
+            )
+        )
+
+        if percentage_1 == 0 and percentage_2 < float("inf"):
+            label = f"Years below {percentage_2}% of normal"
+        elif percentage_1 > 0 and percentage_2 == float("inf"):
+            label = f"Years above {percentage_1}% of normal"
+        else:
+            label = f"Years between {percentage_1}% and {percentage_2}% of normal"
+
+        labels.append(label)
 
     figure_title = f"Years compared to {normal_year}-{normal_year + 29} normal between {begin_year} and {end_year}"
     figure_label = "Percentage of years compared to normal"
@@ -366,18 +390,17 @@ def get_pie_figure_of_years_above_and_below_normal(
 
     figure = go.Figure(
         go.Pie(
-            labels=list(color_map.keys()),
-            values=[
-                years_above_150_percent_of_normal,
-                years_above_normal - years_above_150_percent_of_normal,
-                years_below_normal - years_below_50_percent_of_normal,
-                years_below_50_percent_of_normal,
-            ],
+            labels=labels,
+            values=values,
             name=figure_label,
-            marker={"colors": list(color_map.values())},
+            marker={
+                "colors": px.colors.sequential.Blues[::2]
+                if len(values) <= 6
+                else px.colors.sequential.Blues
+            },
             scalegroup="one",
             sort=False,
-        )
+        ),
     )
 
     update_plotly_figure_layout(

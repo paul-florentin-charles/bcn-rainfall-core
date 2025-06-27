@@ -45,8 +45,8 @@ def update_plotly_figure_layout(
             "family": "Khula, sans-serif",
             "size": 11,
         },
-        paper_bgcolor="rgba(34, 34, 34, 0.6)",
-        plot_bgcolor="rgba(123, 104, 75, 0.3)",
+        paper_bgcolor="rgba(34, 34, 34, 0.65)",
+        plot_bgcolor="rgba(123, 104, 75, 0.25)",
         margin={"t": 65, "r": 30, "b": 45, "l": 65},
         xaxis={
             "rangeslider_visible": display_xaxis_range_slider,

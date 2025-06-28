@@ -51,6 +51,9 @@ def update_plotly_figure_layout(
         xaxis={
             "rangeslider_visible": display_xaxis_range_slider,
         },
+        yaxis={
+            "title_standoff": 5,
+        },
         autosize=True,
     )
 

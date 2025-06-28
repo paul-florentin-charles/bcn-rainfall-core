@@ -41,7 +41,7 @@ def update_plotly_figure_layout(
             "bgcolor": "rgba(125, 125, 125, 0.7)",
         },
         font={
-            "color": "white",
+            "color": "#dfd0c1",
             "family": "Khula, sans-serif",
             "size": 11,
         },

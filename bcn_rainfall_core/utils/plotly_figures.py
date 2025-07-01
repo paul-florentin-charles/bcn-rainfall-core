@@ -105,7 +105,6 @@ def get_figure_of_column_according_to_year(
             title=figure_label or label.value,
             xaxis_title=Label.YEAR.value,
             yaxis_title=label.value,
-            display_xaxis_range_slider=True,
         )
 
         return figure

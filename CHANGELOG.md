@@ -1,5 +1,10 @@
 ## Changelog
 
+### v1.0.7
+_01/07/2025_
+
+- Modify some default fields in `update_plotly_figure_layout` function.
+
 ### v1.0.6
 _26/06/2025_
 

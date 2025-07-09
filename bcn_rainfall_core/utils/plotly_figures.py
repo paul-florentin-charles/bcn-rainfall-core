@@ -38,7 +38,7 @@ def update_plotly_figure_layout(
             "y": 0.99,
             "xanchor": "left",
             "x": 0.01,
-            "bgcolor": "rgba(125, 125, 125, 0.7)",
+            "bgcolor": "rgba(125, 125, 125, 0.8)",
         },
         font={
             "color": "#dfd0c1",
@@ -46,8 +46,8 @@ def update_plotly_figure_layout(
             "size": 11,
         },
         paper_bgcolor="rgba(34, 34, 34, 0.65)",
-        plot_bgcolor="rgba(123, 104, 75, 0.25)",
-        margin={"t": 65, "r": 30, "b": 45, "l": 65},
+        plot_bgcolor="rgba(86, 68, 22, 0.55)",
+        margin={"t": 75, "r": 30, "b": 45, "l": 65},
         xaxis={
             "rangeslider_visible": display_xaxis_range_slider,
         },

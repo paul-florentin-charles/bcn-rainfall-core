@@ -475,6 +475,7 @@ class YearlyRainfall:
                     or f"Rainfall (mm) between {begin_year} and {end_year}",
                     xaxis_title=Label.YEAR.value,
                     yaxis_title=Label.RAINFALL.value,
+                    display_xaxis_range_slider=True,
                 )
         else:
             figure = plotly_fig.get_figure_of_column_according_to_year(

@@ -38,15 +38,15 @@ def update_plotly_figure_layout(
             "y": 0.99,
             "xanchor": "left",
             "x": 0.01,
-            "bgcolor": "rgba(125, 125, 125, 0.8)",
+            "bgcolor": "rgba(35, 35, 35, 0.75)",
         },
         font={
             "color": "#dfd0c1",
             "family": "Khula, sans-serif",
             "size": 11,
         },
-        paper_bgcolor="rgba(34, 34, 34, 0.65)",
-        plot_bgcolor="rgba(86, 68, 22, 0.55)",
+        paper_bgcolor="#25201a",
+        plot_bgcolor="#422d05",
         margin={"t": 75, "r": 30, "b": 45, "l": 65},
         xaxis={
             "rangeslider_visible": display_xaxis_range_slider,
